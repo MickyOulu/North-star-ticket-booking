@@ -1,29 +1,36 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
+import MovieTile from "../components/MovieTile";
+
 
 function Home() {
   const [theatres, setTheatres] = useState([]);
+  const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [city, setCity] = useState("All");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/theatres")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch theatres");
-        return res.json();
-      })
-      .then((data) => {
-        setTheatres(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError("Could not load theatres.");
-        setLoading(false);
-      });
-  }, []);
+  const fetchMovies = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/movies");
+      const data = await res.json();
+      setMovies(data);
+    } catch (err) {
+      console.error("Error fetching movies:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchMovies();
+}, []);
+
+  const filteredTheatres =
+  city === "All"
+    ? theatres
+    : theatres.filter((t) => t.city === city);
 
   return (
   <div style={{ fontFamily: "sans-serif" }}>
@@ -48,67 +55,14 @@ function Home() {
             marginTop: "16px",
           }}
         >
-          {/* For now, reuse theatres as tiles (we’ll replace with movies next) */}
-          {theatres.map((t) => (
-            <div
-              key={t.id}
-              style={{
-                border: "1px solid #e5e7eb",
-                borderRadius: "16px",
-                padding: "16px",
-                background: "#fff",
-              }}
-            >
-              <div
-                style={{
-                  height: "70px",
-                  borderRadius: "12px",
-                  background: "#EEF2FF",
-                  marginBottom: "12px",
-                }}
-              />
-
-              <div style={{ fontWeight: 700 }}>{t.name}</div>
-              <div style={{ fontSize: "14px", marginTop: "6px" }}>
-                {t.city}
-              </div>
-
-              <div style={{ display: "flex", gap: "10px", marginTop: "14px" }}>
-                <button
-                  style={{
-                    flex: 1,
-                    height: "36px",
-                    borderRadius: "10px",
-                    border: "1px solid #2563EB",
-                    background: "#fff",
-                    color: "#2563EB",
-                    cursor: "pointer",
-                  }}
-                >
-                  View Details
-                </button>
-
-                <button
-                  style={{
-                    flex: 1,
-                    height: "36px",
-                    borderRadius: "10px",
-                    border: "none",
-                    background: "#2563EB",
-                    color: "#fff",
-                    cursor: "pointer",
-                  }}
-                >
-                  Book Tickets
-                </button>
-              </div>
-            </div>
+          {movies.map((movie) => (
+            <MovieTile key={movie.id} movie={movie} />
           ))}
-        </div>
-      )}
+</div>  
+ )}
+      </div>
     </div>
-  </div>
-);
+  );
 }
 
 export default Home;

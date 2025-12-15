@@ -1,11 +1,14 @@
+import colors from "../styles/colors";
+
+
 function Hero({ city, setCity }) {
   return (
     <div
-      style={{
-        background: "#2563EB",
-        color: "white",
-        padding: "60px 24px",
-        textAlign: "center",
+      s style={{
+background: `linear-gradient(180deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
+    color: colors.card,
+    padding: "60px 24px",
+    textAlign: "center",
       }}
     >
       <h1 style={{ margin: 0, fontSize: "40px" }}>

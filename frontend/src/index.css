@@ -11,3 +11,22 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Movie Details Page Styles */
+.movie-details-top {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .movie-details-top {
+    grid-template-columns: 1fr;
+  }
+
+  .movie-poster {
+    width: 100% !important;
+    height: 360px !important;
+  }
+}

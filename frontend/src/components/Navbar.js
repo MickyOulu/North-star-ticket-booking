@@ -1,14 +1,11 @@
+import colors from "../styles/colors";
+
 function Navbar() {
   return (
     <div
       style={{
-        height: "64px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "0 24px",
-        borderBottom: "1px solid #eee",
-        background: "#fff",
+        background: colors.card,
+        borderBottom: `1px solid ${colors.background}`,
       }}
     >
       <div style={{ fontWeight: 700 }}>North Star</div>
