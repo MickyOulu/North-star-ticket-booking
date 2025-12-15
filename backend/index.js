@@ -40,19 +40,39 @@ app.get('/api/theatres', async (req, res) => {
 
 
 //get movies
+// get movies (optionally filtered by city)
 app.get('/api/movies', async (req, res) => {
+  const { city } = req.query;
+
   try {
+    // If no city or city is "All", return all movies
+    if (!city || city === "All") {
+      const result = await pool.query(
+        `SELECT id, title, genre, duration, rating, description, poster_url
+         FROM movies
+         ORDER BY id`
+      );
+      return res.json(result.rows);
+    }
+
+    // If a city is selected, return only movies available in theatres of that city
     const result = await pool.query(
-      `SELECT id, title, genre, duration, rating, description, poster_url
-       FROM movies
-       ORDER BY id`
+      `SELECT DISTINCT m.id, m.title, m.genre, m.duration, m.rating, m.description, m.poster_url
+       FROM movies m
+       JOIN movie_theatres mt ON mt.movie_id = m.id
+       JOIN theatres t ON t.id = mt.theatre_id
+       WHERE t.city = $1
+       ORDER BY m.id`,
+      [city]
     );
+
     res.json(result.rows);
   } catch (err) {
     console.error('Error fetching movies:', err);
     res.status(500).json({ error: 'Failed to fetch movies' });
   }
 });
+
 
 //get movies by ID
 app.get('/api/movies/:id', async (req, res) => {

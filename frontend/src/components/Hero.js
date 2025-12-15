@@ -1,19 +1,18 @@
 import colors from "../styles/colors";
 
+function Hero({ city, setCity, theatres = [] }) {
+  // build unique city list from theatres
+  const cities = Array.from(new Set(theatres.map((t) => t.city))).sort();
 
-function Hero({ city, setCity }) {
   return (
-    <div
-      s style={{
-background: `linear-gradient(180deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
-    color: colors.card,
-    padding: "60px 24px",
-    textAlign: "center",
+    <div style={{
+        background: `linear-gradient(180deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
+        color: colors.card,
+        padding: "60px 24px",
+        textAlign: "center",
       }}
     >
-      <h1 style={{ margin: 0, fontSize: "40px" }}>
-        Find a theatre near you
-      </h1>
+      <h1 style={{ margin: 0, fontSize: "40px" }}>Find a theatre near you</h1>
 
       <p style={{ marginTop: "12px", fontSize: "18px", opacity: 0.95 }}>
         Choose a city and book tickets easily
@@ -32,9 +31,12 @@ background: `linear-gradient(180deg, ${colors.primary} 0%, ${colors.secondary} 1
           }}
         >
           <option value="All">All Cities</option>
-          <option value="Oulu">Oulu</option>
-          <option value="Turku">Turku</option>
-          <option value="Helsinki">Helsinki</option>
+
+          {cities.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
         </select>
       </div>
     </div>
