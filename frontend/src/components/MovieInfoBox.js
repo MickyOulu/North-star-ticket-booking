@@ -1,6 +1,11 @@
 import colors from "../styles/colors";
+import posterMap from "../assets/posters/posterMap";
+import defaultPoster from "../assets/posters/Interstellar.jpg";
+
 
 function MovieInfoBox({ movie, loading, error, cardStyle }) {
+
+    const posterImg = movie ? (posterMap[movie.title] || defaultPoster) : defaultPoster;
   return (
     <div className="movie-details-top" style={{ display: "flex", gap: 18 }}>
       {/* Poster */}
@@ -18,7 +23,16 @@ function MovieInfoBox({ movie, loading, error, cardStyle }) {
           flexShrink: 0,
         }}
       >
-        Poster
+       <img
+    src={posterImg}
+    alt={`${movie?.title || "Movie"} poster`}
+    style={{
+      width: "100%",
+      height: "100%",
+      objectFit: "cover",
+      display: "block",
+    }}
+  />
       </div>
 
       {/* Details */}
