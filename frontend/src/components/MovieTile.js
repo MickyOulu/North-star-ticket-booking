@@ -1,20 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import colors from "../styles/colors";
 
-function MovieTile({ movie }) {
+function MovieTile({ movie, selectedCity }) {
   const navigate = useNavigate();
-
-  // safety (prevents crash if movie is missing)
   if (!movie) return null;
 
   const goToDetails = (e) => {
-    e.stopPropagation(); // prevents card click from firing too
-    navigate(`/movie/${movie.id}`);
+    e.stopPropagation();
+    console.log("Navigating with city:", selectedCity); // debug
+    navigate(`/movie/${movie.id}`, { state: { city: selectedCity } });
   };
 
   return (
     <div
-      onClick={() => navigate(`/movie/${movie.id}`)}
+      onClick={() => navigate(`/movie/${movie.id}`, { state: { city: selectedCity } })}
       style={{
         background: colors.card,
         border: "1px solid rgba(15, 23, 42, 0.10)",
@@ -23,7 +22,6 @@ function MovieTile({ movie }) {
         cursor: "pointer",
       }}
     >
-      {/* Poster placeholder */}
       <div
         style={{
           height: 220,
@@ -33,7 +31,6 @@ function MovieTile({ movie }) {
         }}
       />
 
-      {/* Title + meta */}
       <h3 style={{ margin: "0 0 6px 0", color: colors.primary }}>
         {movie.title}
       </h3>
@@ -42,9 +39,9 @@ function MovieTile({ movie }) {
         {movie.genre} • {movie.duration}
       </p>
 
-      {/* Buttons */}
       <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
         <button
+          type="button"
           onClick={goToDetails}
           style={{
             padding: "8px 12px",
@@ -59,7 +56,8 @@ function MovieTile({ movie }) {
         </button>
 
         <button
-          onClick={goToDetails} // later we’ll route this to seat selection
+          type="button"
+          onClick={goToDetails}
           style={{
             padding: "8px 12px",
             borderRadius: 8,

@@ -10,7 +10,7 @@ function Home() {
   const [error, setError] = useState("");
   const [city, setCity] = useState("All");
 
-  // ✅ 1) Fetch theatres once (so dropdown/cities are real)
+  // dropdown city
   useEffect(() => {
     const fetchTheatres = async () => {
       try {
@@ -32,7 +32,7 @@ function Home() {
     fetchTheatres();
   }, []);
 
-  // ✅ 2) Fetch movies whenever city changes
+  // fetching movies based on city
   useEffect(() => {
   const fetchMovies = async () => {
     setLoading(true);
@@ -73,7 +73,7 @@ function Home() {
       <Hero
         city={city}
         setCity={setCity}
-        theatres={theatres} // ✅ pass theatres if your Hero needs it to build dropdown
+        theatres={theatres} //  pass theatres if Hero needs it to build dropdown
       />
 
       {/* Content */}
@@ -97,7 +97,7 @@ function Home() {
             }}
           >
             {movies.map((movie) => (
-              <MovieTile key={movie.id} movie={movie} />
+              <MovieTile key={movie.id} movie={movie} selectedCity={city} />
             ))}
           </div>
         )}

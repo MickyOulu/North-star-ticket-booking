@@ -1,21 +1,67 @@
+import { Link, NavLink } from "react-router-dom";
 import colors from "../styles/colors";
 
 function Navbar() {
   return (
-    <div
+    <nav
       style={{
-        background: colors.card,
-        borderBottom: `1px solid ${colors.background}`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "12px 24px",
+        borderBottom: "1px solid #e5e7eb",
+        background: "#fff",
       }}
     >
-      <div style={{ fontWeight: 700 }}>North Star</div>
+      {/* Logo */}
+      <Link
+        to="/"
+        style={{
+          textDecoration: "none",
+          color: colors.primary,
+          fontWeight: "bold",
+          fontSize: 20,
+        }}
+      >
+        North Star
+      </Link>
 
-      <div style={{ display: "flex", gap: "16px", fontWeight: 600 }}>
-        <div>Home</div>
-        <div>Theatre</div>
-        <div>Events</div>
+      {/* Navigation links */}
+      <div style={{ display: "flex", gap: 20 }}>
+        <NavLink
+          to="/"
+          style={({ isActive }) => ({
+            textDecoration: "none",
+            color: isActive ? colors.primary : colors.secondary,
+            fontWeight: isActive ? "600" : "400",
+          })}
+        >
+          Home
+        </NavLink>
+
+        <NavLink
+          to="/theatre"
+          style={({ isActive }) => ({
+            textDecoration: "none",
+            color: isActive ? colors.primary : colors.secondary,
+            fontWeight: isActive ? "600" : "400",
+          })}
+        >
+          Theatre
+        </NavLink>
+
+        <NavLink
+          to="/events"
+          style={({ isActive }) => ({
+            textDecoration: "none",
+            color: isActive ? colors.primary : colors.secondary,
+            fontWeight: isActive ? "600" : "400",
+          })}
+        >
+          Events
+        </NavLink>
       </div>
-    </div>
+    </nav>
   );
 }
 
