@@ -4,6 +4,10 @@ import MovieDetails from "./pages/MovieDetails";
 import Theatre from "./pages/Theatre";
 import Events from "./pages/Events";
 import SeatSelection from "./pages/SeatSelection";
+import Payment from "./pages/Payment";
+import Ticket from "./pages/Ticket";
+
+
 
 function App() {
   return (
@@ -13,6 +17,10 @@ function App() {
       <Route path="/theatre" element={<Theatre />} />
       <Route path="/events" element={<Events />} />
       <Route path="/movie/:id/seats" element={<SeatSelection />} />
+      <Route path="/payment" element={<Payment />} />
+      <Route path="/ticket" element={<Ticket />} />
+
+
      
 
     </Routes>
