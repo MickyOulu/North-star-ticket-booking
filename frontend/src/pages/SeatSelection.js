@@ -1,10 +1,10 @@
 // src/pages/SeatSelection.js
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import colors from "../styles/colors";
 import SeatInfo from "../components/SeatInfo";
 import BookingInfo from "../components/BookingInfo";
+import { styles, seatButtonStyle } from "./SeatSelection.styles";
 
 /* ---------- Small UI Components (keep Seat here for now) ---------- */
 
@@ -19,19 +19,7 @@ function Seat({ seatId, label, isOccupied, isSelected, onToggle }) {
       aria-label={`Seat ${seatId} ${
         isOccupied ? "occupied" : isSelected ? "selected" : "available"
       }`}
-      style={{
-        height: 34,
-        borderRadius: 10,
-        border: "1px solid rgba(15, 23, 42, 0.14)",
-        background: isOccupied
-          ? "rgba(15, 23, 42, 0.10)"
-          : isSelected
-          ? colors.primary
-          : "#fff",
-        color: isSelected ? "#fff" : colors.primary,
-        cursor: isOccupied ? "not-allowed" : "pointer",
-        fontSize: 12,
-      }}
+      style={seatButtonStyle({ isOccupied, isSelected })}
     >
       {label}
     </button>
@@ -60,6 +48,26 @@ function SeatSelection() {
   // Selected seats (stored as a Set)
   const [selected, setSelected] = useState(() => new Set());
 
+  // Movie title (fetch by movieId)
+  const [movieTitle, setMovieTitle] = useState("");
+
+  // ✅ Hooks must be called before any return
+  useEffect(() => {
+    if (!movieId) return;
+
+    const fetchMovieTitle = async () => {
+      try {
+        const res = await fetch(`/api/movies/${movieId}`);
+        const data = await res.json();
+        setMovieTitle(data.title || "");
+      } catch (err) {
+        console.error("Failed to fetch movie title:", err);
+      }
+    };
+
+    fetchMovieTitle();
+  }, [movieId]);
+
   // Pricing
   const seatPrice = 12;
   const total = selected.size * seatPrice;
@@ -81,34 +89,18 @@ function SeatSelection() {
 
   const clearSelection = () => setSelected(new Set());
 
-  const cardStyle = {
-    background: colors.card,
-    border: "1px solid rgba(15, 23, 42, 0.10)",
-    borderRadius: 16,
-  };
-
-  // Safe early return AFTER hooks
+  // ✅ Safe early return AFTER hooks
   if (!booking) {
     return (
-      <div style={{ minHeight: "100vh", background: colors.background }}>
+      <div style={styles.pageWrap}>
         <Navbar />
-        <div style={{ padding: 24, maxWidth: 800, margin: "0 auto" }}>
-          <h2 style={{ color: colors.primary, marginTop: 12 }}>Session expired</h2>
-          <p style={{ color: colors.secondary }}>
-            Please go back and select a showtime again.
-          </p>
+        <div style={styles.containerNarrow}>
+          <h2 style={{ marginTop: 12 }}>Session expired</h2>
+          <p style={styles.headerLine}>Please go back and select a showtime again.</p>
 
           <button
             onClick={() => navigate(`/movie/${movieId}`)}
-            style={{
-              height: 40,
-              padding: "0 14px",
-              borderRadius: 10,
-              border: "1px solid rgba(15, 23, 42, 0.14)",
-              background: "#fff",
-              cursor: "pointer",
-              color: colors.primary,
-            }}
+            style={styles.actionButton}
           >
             Back to Movie
           </button>
@@ -124,31 +116,18 @@ function SeatSelection() {
   const theatreName = booking.theatreName || "";
 
   return (
-    <div style={{ minHeight: "100vh", background: colors.background }}>
+    <div style={styles.pageWrap}>
       <Navbar />
 
-      <div style={{ padding: 24, maxWidth: 1100, margin: "0 auto" }}>
-        <button
-          onClick={() => navigate(-1)}
-          style={{
-            height: 36,
-            padding: "0 12px",
-            borderRadius: 10,
-            border: "1px solid rgba(15, 23, 42, 0.14)",
-            background: "#fff",
-            cursor: "pointer",
-            color: colors.primary,
-          }}
-        >
+      <div style={styles.container}>
+        <button onClick={() => navigate(-1)} style={styles.backButton}>
           Back
         </button>
 
-        <h1 style={{ marginTop: 16, marginBottom: 6, color: colors.primary }}>
-          Select your seats
-        </h1>
+        <h1 style={styles.title}>Select your seats</h1>
 
-        <div style={{ color: colors.secondary, marginBottom: 18 }}>
-          Movie ID: <b>{movieId}</b>{" "}
+        <div style={styles.headerLine}>
+          Movie: <b>{movieTitle || `Movie ${movieId}`}</b>{" "}
           {theatreName && (
             <>
               • Theatre: <b>{theatreName}</b>
@@ -168,44 +147,21 @@ function SeatSelection() {
           )}
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 18 }}>
+        <div style={styles.layoutGrid}>
           {/* Seat grid card */}
-          <div style={{ ...cardStyle, padding: 18 }}>
+          <div style={styles.card}>
             {/* Screen */}
-            <div
-              style={{
-                textAlign: "center",
-                padding: "10px 0",
-                borderRadius: 10,
-                background: "rgba(15, 23, 42, 0.06)",
-                color: colors.secondary,
-                marginBottom: 18,
-              }}
-            >
-              SCREEN
-            </div>
+            <div style={styles.screen}>SCREEN</div>
 
             {/* Grid */}
-            <div style={{ display: "grid", gap: 8 }}>
+            <div style={styles.gridWrap}>
               {Array.from({ length: rows }).map((_, r) => {
                 const rowLetter = String.fromCharCode(65 + r);
                 return (
-                  <div
-                    key={rowLetter}
-                    style={{ display: "flex", alignItems: "center", gap: 10 }}
-                  >
-                    <div style={{ width: 18, color: colors.secondary, fontSize: 12 }}>
-                      {rowLetter}
-                    </div>
+                  <div key={rowLetter} style={styles.rowWrap}>
+                    <div style={styles.rowLabel}>{rowLetter}</div>
 
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: `repeat(${cols}, 1fr)`,
-                        gap: 8,
-                        flex: 1,
-                      }}
-                    >
+                    <div style={styles.seatGrid(cols)}>
                       {Array.from({ length: cols }).map((_, c) => {
                         const seatId = `${rowLetter}${c + 1}`;
                         const isOccupied = occupied.has(seatId);
@@ -238,12 +194,13 @@ function SeatSelection() {
             onClear={clearSelection}
             onContinue={() =>
               navigate("/payment", {
-                                state: {
-                                movieTitle: `Movie ${movieId}`,  // Get movieTitle from movieId or booking data
-                                showtime: `${date} ${time}`,     // Show the date and time together
-                                seats: selectedList,         // MUST be your selected seats array
-                                theatreName: theatreName || "", // Add theatreName here
-                                                },
+                state: {
+                  movieTitle: movieTitle || `Movie ${movieId}`,
+                  showtime: `${date} ${time}`,
+                  seats: selectedList,
+                  theatreName: theatreName || "",
+                  theatreId,
+                },
               })
             }
           />

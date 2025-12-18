@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import colors from "../styles/colors";
 
 import MovieInfoBox from "../components/MovieInfoBox";
 import ShowtimeButtons from "../components/ShowtimeButtons";
+
+import { styles } from "./MovieDetails.styles";
 
 function MovieDetails() {
   const { id } = useParams();
@@ -117,21 +118,6 @@ function MovieDetails() {
     fetchShowtimes();
   }, [id, selectedTheatre, selectedDate]);
 
-  // UI helpers
-  const cardStyle = {
-    background: colors.card,
-    border: "1px solid rgba(15, 23, 42, 0.10)",
-    borderRadius: 16,
-  };
-
-  const inputStyle = {
-    padding: "10px 12px",
-    borderRadius: 10,
-    border: "1px solid rgba(15, 23, 42, 0.14)",
-    background: "#fff",
-    color: colors.primary,
-  };
-
   // When a user picks a showtime button
   const handlePickTime = (showtime) => {
     const theatreName =
@@ -152,43 +138,29 @@ function MovieDetails() {
   };
 
   return (
-    <div
-      style={{
-        fontFamily: "sans-serif",
-        background: colors.background,
-        minHeight: "100vh",
-      }}
-    >
+    <div style={styles.pageWrap}>
       <Navbar />
 
-      <div style={{ padding: "24px", maxWidth: 1100, margin: "0 auto" }}>
-        <button
-          onClick={() => navigate(-1)}
-          style={{
-            height: "36px",
-            padding: "0 12px",
-            borderRadius: "10px",
-            border: "1px solid rgba(15, 23, 42, 0.14)",
-            background: "#fff",
-            cursor: "pointer",
-            color: colors.primary,
-            marginBottom: 16,
-          }}
-        >
+      <div style={styles.container}>
+        <button onClick={() => navigate(-1)} style={styles.backButton}>
           Back
         </button>
 
-        {/* ✅ Movie top section extracted */}
-        <MovieInfoBox movie={movie} loading={loading} error={error} cardStyle={cardStyle} />
+        <MovieInfoBox
+          movie={movie}
+          loading={loading}
+          error={error}
+          cardStyle={styles.card}
+        />
 
-        {/* Controls (kept here because it changes state) */}
-        <div style={{ marginTop: 18, display: "flex", gap: 12 }}>
+        {/* Controls */}
+        <div style={styles.controlsRow}>
           <div>
-            <div style={{ fontSize: 12, marginBottom: 6 }}>Theatre</div>
+            <div style={styles.label}>Theatre</div>
             <select
               value={selectedTheatre}
               onChange={(e) => setSelectedTheatre(e.target.value)}
-              style={inputStyle}
+              style={styles.input}
               disabled={theatresLoading || filteredTheatres.length === 0}
             >
               {theatresLoading && <option>Loading theatres...</option>}
@@ -203,22 +175,21 @@ function MovieDetails() {
           </div>
 
           <div>
-            <div style={{ fontSize: 12, marginBottom: 6 }}>Date</div>
+            <div style={styles.label}>Date</div>
             <input
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              style={inputStyle}
+              style={styles.input}
             />
           </div>
         </div>
 
-        {/* ✅ Showtimes section extracted */}
         <ShowtimeButtons
           showtimes={showtimes}
           showtimesLoading={showtimesLoading}
           showtimesError={showtimesError}
-          cardStyle={cardStyle}
+          cardStyle={styles.card}
           onPickTime={handlePickTime}
         />
       </div>
