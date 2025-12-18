@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Stripe = require("stripe");
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 
@@ -13,7 +14,7 @@ router.get("/stripe-test", (req, res) => {
 router.post("/create-checkout-session", async (req, res) => {
   try {
     
-const { movieTitle, showtime, seats } = req.body;
+const { movieTitle, showtime, seats, theatreName } = req.body;
 
     const session = await stripe.checkout.sessions.create({
       ui_mode: "embedded",
@@ -37,7 +38,7 @@ const { movieTitle, showtime, seats } = req.body;
   movieTitle: movieTitle || "",
   showtime: showtime || "",
   seats: Array.isArray(seats) ? seats.join(",") : (seats || ""),
-},
+  theatreName: theatreName || "",},
 
     });
 
@@ -64,6 +65,7 @@ router.get("/session-status", async (req, res) => {
       payment_status: session.payment_status, // paid / unpaid
       customer_email: session.customer_details?.email || null,
       movieTitle: session.metadata?.movieTitle || "",
+theatreName: session.metadata?.theatreName || "",
 showtime: session.metadata?.showtime || "",
 seats: session.metadata?.seats || "",
 

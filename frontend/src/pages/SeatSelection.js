@@ -64,7 +64,6 @@ function SeatSelection() {
   const seatPrice = 12;
   const total = selected.size * seatPrice;
 
-  // ✅ Change: no useMemo for selectedList (beginner-friendly)
   const selectedList = Array.from(selected).sort((a, b) =>
     a.localeCompare(b, undefined, { numeric: true })
   );
@@ -238,7 +237,14 @@ function SeatSelection() {
             selectedList={selectedList}
             onClear={clearSelection}
             onContinue={() =>
-              alert("Next step: payment later. For now we just built seat selection UI.")
+              navigate("/payment", {
+                                state: {
+                                movieTitle: `Movie ${movieId}`,  // Get movieTitle from movieId or booking data
+                                showtime: `${date} ${time}`,     // Show the date and time together
+                                seats: selectedList,         // MUST be your selected seats array
+                                theatreName: theatreName || "", // Add theatreName here
+                                                },
+              })
             }
           />
         </div>

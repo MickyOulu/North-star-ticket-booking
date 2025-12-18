@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { QRCodeSVG} from "qrcode.react";
+import "./Ticket.css";
 
 export default function Ticket() {
   const location = useLocation();
@@ -45,30 +46,62 @@ export default function Ticket() {
   if (error || statusData.payment_status !== "paid") {
     return (
       <div style={{ padding: 24 }}>
-        <h2>❌ Payment not completed</h2>
+        <h2>Payment not completed</h2>
         <Link to="/">Go Home</Link>
       </div>
     );
   }
 
-  // ✅ PAID
+  // Payment successful
   return (
-    <div style={{ padding: 24, maxWidth: 500 }}>
-      <h2>🎟️ Ticket Confirmed</h2>
+    
+  <div className="ticket-wrap">
+    <h2 className="ticket-title">🎟️ Ticket Confirmed</h2>
 
-      <p><strong>Status:</strong> Paid</p>
-      <p><strong>Email:</strong> {statusData.customer_email}</p>
-
-      <div style={{ margin: "20px 0" }}>
-        <QRCodeSVG value={sessionId} size={180} />
-        <p style={{ fontSize: 12 }}>Scan at theatre entrance</p>
+    <div className="ticket-card">
+      <div className="ticket-row">
+        <span className="ticket-label">Movie:</span> {statusData.movieTitle}
       </div>
 
-      <p style={{ fontSize: 12 }}>
-        Ticket ID: <code>{sessionId}</code>
-      </p>
+      <div className="ticket-row">
+  <span className="ticket-label">Theatre:</span> {statusData.theatreName}
+</div>
 
-      <Link to="/">Back to Home</Link>
+      <div className="ticket-row">
+        <span className="ticket-label">Showtime:</span> {statusData.showtime}
+      </div>
+
+      <div className="ticket-row">
+        <span className="ticket-label">Seats:</span> {statusData.seats}
+      </div>
+
+      <div className="ticket-row">
+        <span className="ticket-label">Status:</span> Confirmed
+      </div>
+
+
+
+      <div className="ticket-row">
+        <span className="ticket-label">Email:</span> {statusData.customer_email}
+      </div>
+
+      <div className="ticket-qr">
+        <QRCodeSVG value={sessionId} size={180} />
+        <div style={{ fontSize: 12, marginTop: 6 }}>
+          Scan at theatre entrance
+        </div>
+
+        <div className="ticket-id">
+          Ticket ID: <code>{sessionId}</code>
+        </div>
+
+        <Link className="ticket-link" to="/">
+          Back to Home
+        </Link>
+        </div>
     </div>
-  );
+  </div>
+);
+        
+    
 }

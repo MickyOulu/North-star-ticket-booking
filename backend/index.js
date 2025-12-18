@@ -8,6 +8,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use("/api", require("./routes/stripe"));
+app.use("/api/admin", require("./routes/admin"));
+
+
 // test route
 app.get('/', (req, res) => {
   res.send('Backend is working.');
@@ -100,6 +104,34 @@ app.get('/api/movies/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch movie' });
   }
 });
+
+
+// get showtimes by movie + theatre + date
+app.get("/api/showtimes", async (req, res) => {
+  const { movieId, theatreId, date } = req.query;
+
+  if (!movieId || !theatreId || !date) {
+    return res
+      .status(400)
+      .json({ error: "movieId, theatreId, and date are required" });
+  }
+
+  try {
+    const result = await pool.query(
+      `SELECT id, show_time
+       FROM showtimes
+       WHERE movie_id = $1 AND theatre_id = $2 AND show_date = $3
+       ORDER BY show_time`,
+      [movieId, theatreId, date]
+    );
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error fetching showtimes:", err);
+    res.status(500).json({ error: "Failed to fetch showtimes" });
+  }
+});
+
 
 const PORT = process.env.PORT || 5000;
 

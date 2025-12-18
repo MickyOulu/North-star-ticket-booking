@@ -1,0 +1,133 @@
+.admin-dash-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: start center;
+  position: relative;
+  padding: 28px 18px;
+  background: #08101f;
+  color: #eaf1ff;
+  font-family: Arial, sans-serif;
+}
+
+.admin-dash-bg {
+  position: absolute;
+  inset: 0;
+
+  background-color: #050b16;
+  background-image:
+    radial-gradient(circle at 50% 20%, rgba(44, 124, 255, 0.20), transparent 60%),
+    radial-gradient(circle at 20% 70%, rgba(120, 70, 255, 0.12), transparent 60%),
+    linear-gradient(rgba(5, 10, 20, 0.72), rgba(5, 10, 20, 0.72));
+}
+
+.admin-dash-container {
+  position: relative;
+  width: 980px;
+  max-width: 100%;
+}
+
+.admin-dash-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.admin-dash-title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.admin-dash-subtitle {
+  margin: 6px 0 0;
+  color: rgba(234, 241, 255, 0.72);
+  font-size: 13px;
+}
+
+.admin-dash-logout {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: #eaf1ff;
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.admin-dash-logout:hover {
+  background: rgba(255, 255, 255, 0.10);
+}
+
+.admin-dash-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.admin-dash-stat {
+  background: rgba(10, 20, 35, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
+}
+
+.admin-dash-stat-label {
+  color: rgba(234, 241, 255, 0.72);
+  font-size: 13px;
+}
+
+.admin-dash-stat-value {
+  margin-top: 10px;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.admin-dash-card {
+  background: rgba(10, 20, 35, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
+}
+
+.admin-dash-card-title {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.admin-dash-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.admin-dash-table th,
+.admin-dash-table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-dash-table th {
+  color: rgba(234, 241, 255, 0.78);
+  font-size: 13px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.admin-dash-table td {
+  font-size: 14px;
+  color: rgba(234, 241, 255, 0.92);
+}
+
+@media (max-width: 680px) {
+  .admin-dash-grid {
+    grid-template-columns: 1fr;
+  }
+}

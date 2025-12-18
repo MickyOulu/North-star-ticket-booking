@@ -6,6 +6,9 @@ import Events from "./pages/Events";
 import SeatSelection from "./pages/SeatSelection";
 import Payment from "./pages/Payment";
 import Ticket from "./pages/Ticket";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
+
 
 
 
@@ -19,6 +22,9 @@ function App() {
       <Route path="/movie/:id/seats" element={<SeatSelection />} />
       <Route path="/payment" element={<Payment />} />
       <Route path="/ticket" element={<Ticket />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
 
 
      

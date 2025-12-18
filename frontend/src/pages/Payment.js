@@ -1,22 +1,25 @@
 import { useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
-import {
-  EmbeddedCheckoutProvider,
-  EmbeddedCheckout,
-} from "@stripe/react-stripe-js";
+import {  EmbeddedCheckoutProvider,  EmbeddedCheckout,} from "@stripe/react-stripe-js";
 import Navbar from "../components/Navbar";
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
 function Payment() {
   // Demo-style: Stripe calls this function to get the clientSecret
+  const location = useLocation();
+const booking = location.state || {};
+
   const fetchClientSecret = useCallback(() => {
-    return fetch("http://localhost:5000/api/create-checkout-session", {
+    return fetch("/api/create-checkout-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        movieTitle: "Movie Ticket",
-        total: 12,
+        movieTitle: booking.movieTitle || "Movie Ticket",
+      showtime: booking.showtime || "",
+      seats: booking.seats || [],
+        theatreName: booking.theatreName || "",
       }),
     })
       .then((res) => res.json())
