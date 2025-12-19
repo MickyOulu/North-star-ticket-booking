@@ -1,7 +1,17 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import colors from "../styles/colors";
 
 function Navbar() {
+  const navigate = useNavigate();
+
+  // customer auth only (admin handled separately)
+  const customerToken = localStorage.getItem("customerToken");
+
+  const logoutCustomer = () => {
+    localStorage.removeItem("customerToken");
+    navigate("/");
+  };
+
   return (
     <nav
       style={{
@@ -27,7 +37,7 @@ function Navbar() {
       </Link>
 
       {/* Navigation links */}
-      <div style={{ display: "flex", gap: 20 }}>
+      <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
         <NavLink
           to="/"
           style={({ isActive }) => ({
@@ -60,6 +70,46 @@ function Navbar() {
         >
           Events
         </NavLink>
+
+        {/* Customer auth section */}
+        {!customerToken ? (
+          <NavLink
+            to="/login"
+            style={({ isActive }) => ({
+              textDecoration: "none",
+              color: isActive ? colors.primary : colors.secondary,
+              fontWeight: isActive ? "600" : "400",
+            })}
+          >
+            Login
+          </NavLink>
+        ) : (
+          <>
+            <NavLink
+              to="/my-bookings"
+              style={({ isActive }) => ({
+                textDecoration: "none",
+                color: isActive ? colors.primary : colors.secondary,
+                fontWeight: isActive ? "600" : "400",
+              })}
+            >
+              My Bookings
+            </NavLink>
+
+            <button
+              onClick={logoutCustomer}
+              style={{
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
+                color: colors.secondary,
+                fontSize: 14,
+              }}
+            >
+              Logout
+            </button>
+          </>
+        )}
       </div>
     </nav>
   );

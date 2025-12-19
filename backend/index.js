@@ -11,6 +11,9 @@ app.use(express.json());
 app.use("/api", require("./routes/stripe"));
 app.use("/api/admin", require("./routes/admin"));
 
+app.use("/api/customer", require("./routes/customer"));
+
+
 
 // test route
 app.get('/', (req, res) => {

@@ -179,5 +179,108 @@ router.delete("/staff/:id", async (req, res) => {
 });
 
 
+// ---------------- SHOWTIME MANAGEMENT (CRUD-lite) ----------------
+
+// List showtimes (optional filters: date, theatreId)
+router.get("/showtimes", async (req, res) => {
+  const payload = getTokenPayload(req);
+  if (!payload) return res.status(401).json({ message: "Unauthorized" });
+
+  try {
+    const { date, theatreId } = req.query;
+
+    // Join to show movie + theatre names
+    const params = [];
+    let where = "WHERE 1=1";
+
+    if (date) {
+      params.push(date);
+      where += ` AND s.show_date = $${params.length}`;
+    }
+
+    if (theatreId) {
+      params.push(theatreId);
+      where += ` AND s.theatre_id = $${params.length}`;
+    }
+
+    const result = await pool.query(
+      `
+      SELECT
+        s.id,
+        s.movie_id,
+        s.theatre_id,
+        s.show_date,
+        s.show_time,
+        m.title AS movie_title,
+        t.name AS theatre_name
+      FROM showtimes s
+      JOIN movies m ON m.id = s.movie_id
+      JOIN theatres t ON t.id = s.theatre_id
+      ${where}
+      ORDER BY s.show_date DESC, s.show_time ASC
+      `,
+      params
+    );
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Admin showtimes list error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Add a showtime
+router.post("/showtimes", async (req, res) => {
+  const payload = getTokenPayload(req);
+  if (!payload) return res.status(401).json({ message: "Unauthorized" });
+
+  try {
+    const { movieId, theatreId, showDate, showTime } = req.body;
+
+    if (!movieId || !theatreId || !showDate || !showTime) {
+      return res.status(400).json({
+        message: "movieId, theatreId, showDate, showTime are required",
+      });
+    }
+
+    const result = await pool.query(
+      `
+      INSERT INTO showtimes (movie_id, theatre_id, show_date, show_time)
+      VALUES ($1, $2, $3, $4)
+      RETURNING id, movie_id, theatre_id, show_date, show_time
+      `,
+      [movieId, theatreId, showDate, showTime]
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error("Admin showtimes add error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Delete a showtime
+router.delete("/showtimes/:id", async (req, res) => {
+  const payload = getTokenPayload(req);
+  if (!payload) return res.status(401).json({ message: "Unauthorized" });
+
+  try {
+    const id = req.params.id;
+
+    const result = await pool.query(
+      "DELETE FROM showtimes WHERE id = $1 RETURNING id",
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Showtime not found" });
+    }
+
+    res.json({ message: "Showtime deleted" });
+  } catch (err) {
+    console.error("Admin showtimes delete error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 module.exports = router;

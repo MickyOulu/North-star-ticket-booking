@@ -8,6 +8,14 @@ import Payment from "./pages/Payment";
 import Ticket from "./pages/Ticket";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminStaff from "./pages/AdminStaff";
+import AdminShows from "./pages/AdminShows";
+import CustomerLogin from "./pages/CustomerLogin";
+import MyBookings from "./pages/MyBookings";
+import CustomerRegister from "./pages/CustomerRegister";
+
+
+
 
 
 
@@ -24,6 +32,12 @@ function App() {
       <Route path="/ticket" element={<Ticket />} />
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/staff" element={<AdminStaff />} />
+      <Route path="/admin/shows" element={<AdminShows />} />
+      <Route path="/login" element={<CustomerLogin />} />
+<Route path="/my-bookings" element={<MyBookings />} />
+      <Route path="/register" element={<CustomerRegister />} /> 
+
 
 
 
